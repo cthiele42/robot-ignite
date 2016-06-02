@@ -40,7 +40,7 @@ public class CacheKeywordsTest {
 
     @Test
     public void testCacheNodeCountPass() throws Exception {
-        cacheKeywords.nodeCountWithCacheShouldBe("testCache", 1);
+        cacheKeywords.nodeCountWithCacheShouldBe("testCache", 2);
     }
 
     @Test
@@ -56,5 +56,20 @@ public class CacheKeywordsTest {
     @Test(expected = RuntimeException.class)
     public void testCacheNodeCountFailWrongName() throws Exception {
         cacheKeywords.nodeCountWithCacheShouldBe("fooBar", 1);
+    }
+
+    @Test
+    public void testCacheSizePass() throws Exception {
+        cacheKeywords.cacheSizeShouldBe("testCache", 0);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCacheSizeFailWrongSize() throws Exception {
+        cacheKeywords.cacheSizeShouldBe("testCache", 1);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCacheSizeFailWrongName() throws Exception {
+        cacheKeywords.cacheSizeShouldBe("fooBar", 0);
     }
 }
