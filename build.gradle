@@ -1,0 +1,59 @@
+/*
+ * Copyright 2016 Claas Thiele.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "org.roboscratch.gradle:gradle-robot:1.0.0"
+        classpath "org.roboscratch.ignite:robot-ignite:1.0.0"
+    }
+}
+
+plugins {
+    id 'net.linguica.maven-settings' version '0.5'
+    id 'java'
+    id 'maven'
+    id 'idea'
+}
+
+apply plugin: 'org.roboscratch.robot'
+
+repositories {
+    mavenLocal()
+    maven {}
+}
+
+group = 'org.roboscratch.ignite'
+version = '1.0.0'
+
+ext {
+    igniteVersion = "1.6.0"
+}
+
+test {
+    forkEvery 1
+}
+
+dependencies {
+    compile 'org.robotframework:javalib-core:1.2.1'
+    compile "org.apache.ignite:ignite-core:" + igniteVersion
+    compile "org.apache.ignite:ignite-spring:" + igniteVersion
+    compile "org.apache.ignite:ignite-indexing:" + igniteVersion
+    testCompile "junit:junit:4.12"
+}
