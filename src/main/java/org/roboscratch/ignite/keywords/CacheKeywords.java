@@ -44,4 +44,18 @@ public class CacheKeywords {
             throw new RuntimeException("Awaited size of cache " + cacheName + ": " + size + ", but was " + cacheSize);
         }
     }
+
+    @RobotKeyword("Clear the cache with given name.\n" +
+            "Example:\n" +
+            "| Clear Cache | myCache |")
+    public void clearCache(String cacheName) {
+        if(IgniteLibrary.ignite == null) {
+            throw new IllegalStateException("Not connected - please connect to a Ignite cluster first using the keyword 'Connect To Ignite'");
+        }
+        IgniteCache<?,?> cache = IgniteLibrary.ignite.cache(cacheName);
+        if(cache == null) {
+            throw new RuntimeException("Cache with name " + cacheName + " does not exist");
+        }
+        cache.clear();
+    }
 }
