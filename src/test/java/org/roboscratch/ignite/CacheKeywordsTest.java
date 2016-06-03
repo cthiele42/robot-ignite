@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.roboscratch.ignite.keywords.CacheKeywords;
 import org.roboscratch.ignite.keywords.ClusterKeywords;
 
+import java.util.TreeSet;
+
 import static org.junit.Assert.*;
 
 /**
@@ -27,7 +29,8 @@ public class CacheKeywordsTest {
 
         IgniteConfiguration cfg = new IgniteConfiguration();
         CacheConfiguration<String, String> cacheCfg = new CacheConfiguration<>("testCache");
-        cfg.setCacheConfiguration(cacheCfg);
+        CacheConfiguration<String, TreeSet> cacheCfg2 = new CacheConfiguration<>("testCache2");
+        cfg.setCacheConfiguration(cacheCfg, cacheCfg2);
 
         Ignition.start(cfg.setGridName("testCacheCount"));
 
@@ -77,6 +80,7 @@ public class CacheKeywordsTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCacheClear() throws Exception {
         IgniteCache cache = IgniteLibrary.ignite.cache("testCache");
         assertNotNull(cache);
@@ -85,5 +89,21 @@ public class CacheKeywordsTest {
 
         cacheKeywords.clearCache("testCache");
         assertEquals(0, cache.size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGet() throws Exception {
+        IgniteCache cache = IgniteLibrary.ignite.cache("testCache2");
+        assertNotNull(cache);
+        TreeSet<String> value = new TreeSet();
+        value.add("bar");
+
+        cache.put("foo", value);
+        assertEquals(1, cache.size());
+
+        Object valueGot = cacheKeywords.getFromCache("testCache2", "foo");
+
+        assertEquals("bar", ((TreeSet<String>)valueGot).first());
     }
 }

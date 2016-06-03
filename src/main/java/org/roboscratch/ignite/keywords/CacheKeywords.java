@@ -28,7 +28,7 @@ public class CacheKeywords {
 
     @RobotKeyword("Fails if the size of the given cache does not match the expected size.\n" +
             "Example:\n" +
-            "| Cache Size Should Be | 2 |")
+            "| Cache Size Should Be | myCache | 2 |")
     @ArgumentNames({"cacheName", "size"})
     public void cacheSizeShouldBe(String cacheName, int size) {
         if(IgniteLibrary.ignite == null) {
@@ -48,14 +48,38 @@ public class CacheKeywords {
     @RobotKeyword("Clear the cache with given name.\n" +
             "Example:\n" +
             "| Clear Cache | myCache |")
+    @ArgumentNames({"cacheName"})
     public void clearCache(String cacheName) {
         if(IgniteLibrary.ignite == null) {
             throw new IllegalStateException("Not connected - please connect to a Ignite cluster first using the keyword 'Connect To Ignite'");
         }
-        IgniteCache<?,?> cache = IgniteLibrary.ignite.cache(cacheName);
+        IgniteCache<?, ?> cache = IgniteLibrary.ignite.cache(cacheName);
         if(cache == null) {
             throw new RuntimeException("Cache with name " + cacheName + " does not exist");
         }
         cache.clear();
+    }
+
+    @RobotKeyword("Get a cache value for the given key.\n" +
+            "Example:\n" +
+            "| ${value}= | Get From Cache | myCache | key1 |")
+    @ArgumentNames({"cacheName", "key"})
+    @SuppressWarnings("unchecked")
+    public Object getFromCache(String cacheName, Object key) {
+        if(IgniteLibrary.ignite == null) {
+            throw new IllegalStateException("Not connected - please connect to a Ignite cluster first using the keyword 'Connect To Ignite'");
+        }
+        IgniteCache cache = IgniteLibrary.ignite.cache(cacheName);
+        if(cache == null) {
+            throw new RuntimeException("Cache with name " + cacheName + " does not exist");
+        }
+
+        return cache.get(key);
+    }
+
+    @RobotKeyword("")
+    @ArgumentNames({"cacheName", "key", "value"})
+    public void putToCache(String cacheName, Object key, Object value) {
+        IgniteLibrary.ignite.cache("test-cache").put(key, value);
     }
 }
